@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Detector - Mood Wave</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="style.css" rel="stylesheet">
+    <script src="script.js"></script>
+    <style>
+        body {
+            background-image: url('images/back.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: black;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .emoji-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .emoji {
+            font-size: 3rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .emoji:hover {
+            transform: scale(1.2);
+        }
+        .quote-box {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 600px;
+            margin: 20px auto;
+            font-weight: bold;
+        }
+        /* .dark-mode .quote-box {
+            background: #333;
+            color: white;
+        }
+        .dark-mode body {
+            color: white;
+            background-color: #121212;
+        }
+        .dark-mode .navbar {
+            background-color: #1a1a1a;
+        }
+        .dark-mode .btn-dark {
+            background-color: #333;
+            color: white;
+        } */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/wave.png" alt="Mood Wave"> Mood Wave
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="mood.html">Mood Detector</a></li>
+                    <li class="nav-item"><a class="nav-link" href="progress.html">Progress</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container text-center mt-5 pt-5">
+        <h1 style="color: white;">Select Your Mood</h1>
+        <div class="emoji-container">
+            <span class="emoji" data-mood="happy" data-bg="images/happy.jpg">😊</span>
+            <span class="emoji" data-mood="sad" data-bg="images/sad.jpg">😢</span>
+            <span class="emoji" data-mood="angry" data-bg="images/anger.jpg">😡</span>
+            <span class="emoji" data-mood="excited" data-bg="images/excite.jpg">🤩</span>
+            <span class="emoji" data-mood="bored" data-bg="images/bore.jpg">😐</span>
+            <span class="emoji" data-mood="loved" data-bg="images/love.jpg">❤️</span>
+            <span class="emoji" data-mood="surprised" data-bg="images/surprise.jpg">😲</span>
+            <span class="emoji" data-mood="sleepy" data-bg="images/sleepy.jpg">😴</span>
+            <span class="emoji" data-mood="confused" data-bg="images/confuse.jpg">😕</span>
+            <span class="emoji" data-mood="frustrated" data-bg="images/frustrate.jpg">😖</span>
+        </div>
+        <div class="quote-box" id="quoteBox">
+            <h2 id="moodText"></h2>
+            <p id="quote"></p>
+            <p id="quote2"></p>
+            <a id="motivationBtn" class="btn btn-dark" target="_blank">Watch Motivational Video</a>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function() {
+            // Theme toggle function
+            
+
+            // Save mood data to localStorage
+            function saveMoodData(timeOfDay, mood) {
+                let moodData = JSON.parse(localStorage.getItem('moodData')) || {};
+                let now = new Date();
+                let today = now.toISOString().split('T')[0];
+
+                if (!moodData[today]) {
+                    moodData[today] = { morning: null, afternoon: null, evening: null, night: null };
+                }
+
+                moodData[today][timeOfDay] = mood;
+                localStorage.setItem('moodData', JSON.stringify(moodData));
+            }
+
+            // Emoji click handler
+            $('.emoji').click(function() {
+                let mood = $(this).data('mood');
+                let bgImage = $(this).data('bg');
+                $('body').css('background-image', 'url(' + bgImage + ')');
+                
+                let now = new Date();
+                let hours = now.getHours();
+                let timeOfDay = hours < 12 ? 'morning' : hours < 17 ? 'afternoon' : hours < 20 ? 'evening' : 'night';
+
+                saveMoodData(timeOfDay, mood);
+
+                let quotes = {
+                    "happy": ["Happiness is a journey, not a destination!", "Keep smiling, it makes people wonder what you're up to!"],
+                    "sad": ["Tough times never last, but tough people do.", "It's okay to not be okay. Better days are coming."],
+                    "angry": ["For every minute of anger, you lose 60 seconds of happiness.", "Breathe. Let it go. Focus on what truly matters."],
+                    "excited": ["Dream big and dare to fail!", "Excitement fuels progress, keep moving forward!"],
+                    "bored": ["Boredom is a sign you need something new to challenge you!", "Every moment is a chance to create something amazing."],
+                    "loved": ["You are loved beyond measure!", "The best thing to hold onto in life is each other."],
+                    "surprised": ["Life is full of surprises, embrace them!", "Sometimes the best things happen unexpectedly."],
+                    "sleepy": ["Take a break, recharge, and conquer!", "Rest now, conquer tomorrow."],
+                    "confused": ["Clarity comes with calmness. Take a deep breath.", "It's okay to be unsure. You’ll find your way."],
+                    "frustrated": ["Frustration is the first step toward progress.", "Calm down. You are stronger than you think."]
+                };
+
+                $('#moodText').text("You are feeling " + mood.charAt(0).toUpperCase() + mood.slice(1) + "!");
+                $('#quote').text(quotes[mood][0]);
+                $('#quote2').text(quotes[mood][1]);
+                $('#motivationBtn').attr("href", "https://www.youtube.com/results?search_query=" + mood + "+motivational+video");
+                $('#quoteBox').fadeIn();
+            });
+
+            // Dark mode toggle button click
+            $('#themeToggle').click(function() {
+                toggleTheme();
+            });
+        });
+    </script>
+
+   
+
+    <footer class="footer">
+        <p>&copy; 2025 Mood Wave. All rights reserved.</p>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

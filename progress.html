@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress - Mood Wave</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="style.css" rel="stylesheet">
+    <script src="script.js"></script>
+    <style>
+        body {
+    background-image: url('images/back.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: black;
+    font-weight: bold;
+}
+
+.container {
+    /* margin-top: 10px; Adjusted so heading appears correctly */
+    text-align: center;
+    padding: 10px;
+}
+
+h1 {
+    
+    font-size: 2rem;
+    margin-bottom: 10px;
+    /* margin-top: 10%; */
+}
+
+canvas {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 100%;
+    height: auto;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+        
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        padding-top: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+        padding-left: 20px;
+        /* margin-top: 10%; Ensure visibility */
+    }
+    
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/wave.png" alt="Logo" width="30" height="30">
+                Mood Wave
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mood.html">Mood Detector</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="progress.html">Progress</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="head text-center mt-3 pt-3">
+        <h1 style="margin-top: 10%;">Your Mood Progress</h1>
+        <canvas id="moodChart" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Mapping moods to corresponding values (0-10)
+            const moodValues = {
+                "frustrated": 0,
+                "confused": 1,
+                "angry": 2,
+                "sad": 3,
+                "bored": 4,
+                "sleepy": 5,
+                "surprised": 6,
+                "loved": 7,
+                "excited": 8,
+                "happy": 9
+            };
+
+            // Retrieve saved mood data from localStorage
+            let moodData = JSON.parse(localStorage.getItem("moodData")) || {};
+            let now = new Date();
+            let today = now.toISOString().split('T')[0];
+
+            if (!moodData[today]) {
+                moodData[today] = { morning: null, afternoon: null, evening: null, night: null };
+            }
+
+            function updateChart() {
+                let timesOfDay = ["morning", "afternoon", "evening", "night"];
+                let moodLabels = timesOfDay.map(time => time.charAt(0).toUpperCase() + time.slice(1));
+                let moodValuesArray = timesOfDay.map(time => moodData[today][time] ? moodValues[moodData[today][time]] : 0);
+
+                let ctx = document.getElementById("moodChart").getContext("2d");
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: moodLabels,
+                        datasets: [{
+                            label: "Mood Progress",
+                            data: moodValuesArray,
+                            borderColor: "blue",
+                            fill: false,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                ticks: {
+                                    stepSize: 1,
+                                    min: 0,
+                                    max: 9,
+                                    callback: function(value) {
+                                        const moodLabels = ["Frustrated", "Confused", "Angry", "Sad", "Bored", "Sleepy", "Surprised", "Loved", "Excited", "Happy"];
+                                        return moodLabels[value] + " (" + value + ")";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            updateChart();
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

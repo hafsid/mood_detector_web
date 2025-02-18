@@ -1,0 +1,62 @@
+/* Light Mode Styles (default) */
+body {
+    background-color: #f9f9f9;
+    color: #333;
+}
+.dark-mode {
+    background-image: url('images/darkbg.webp') !important; /* Dark mode background */
+    background-color: #222 !important;
+    color: white !important;
+}
+
+.navbar {
+    background-color: #007bff;
+}
+
+.card {
+    background-color: #ffffff;
+    color: #333;
+}
+
+.btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+a {
+    color: #007bff;
+}
+
+input, select {
+    background-color: #fff;
+    color: #333;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode .navbar {
+    background-color: #333;
+}
+
+body.dark-mode .card {
+    background-color: #424242;
+    color: #e0e0e0;
+}
+
+body.dark-mode .btn {
+    background-color: #444;
+    color: #fff;
+}
+
+body.dark-mode a {
+    color: #a0a0a0;
+}
+
+body.dark-mode input, body.dark-mode select {
+    background-color: #333;
+    color: #fff;
+}

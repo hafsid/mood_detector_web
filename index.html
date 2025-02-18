@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Wave - Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="darkmode.js"></script> Link to global darkmode.js -->
+    <link href="style.css" rel="stylesheet">
+    <script src="script.js"></script>
+    <style>
+        body {
+            padding-top: 10%;
+            background-image: url('images/back.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: black;
+            font-weight: bolder;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            padding: 10px;
+        }
+
+        .navbar-brand img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .container {
+            margin-top: 17px;
+            text-align: center;
+        }
+
+        .header-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: rgb(131, 76, 103);
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .description {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .btn-custom {
+            background: #3E4E56;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .btn-custom:hover {
+            background: rgb(236, 156, 156);
+            color: black;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        /* Dark mode styles */
+        .dark-mode {
+            background-image: url('images/darkbg.webp') !important; /* Dark mode background */
+            background-color: #222 !important;
+            color: white !important;
+        }
+
+         /* Chat Box Styling */
+         #chat-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            background: rgba(255, 255, 255, 0.9);
+            color: black;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #chat-header {
+            background: #3E4E56;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        #chat-header span {
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        #chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 10px;
+        }
+
+        .user-message {
+            background: #3E4E56;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background: #e0e0e0;
+            color: black;
+            align-self: flex-start;
+        }
+
+        #chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background: white;
+        }
+
+        #chat-input input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #chat-input button {
+            margin-right: 100px;
+            padding: 8px 20px;
+            border: none;
+            background: #3E4E56;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #chat-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #3E4E56;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            text-align: center;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Accessibility improvements */
+        .header-text {
+            font-size: 3rem;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header-text {
+                margin-top:20%;
+                font-size: 2rem;
+            }
+            .description {
+                font-size: 1rem;
+                padding: 10px;
+            }
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/wave.png" alt="Logo">
+                Mood Wave
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mood.html">Mood Detector</a></li>
+                    <li class="nav-item"><a class="nav-link" href="progress.html">Progress</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="header-text">Discover How You Feel and Track Your Emotions</h1>
+        <p class="description">Mood Wave helps you understand and track your emotional journey effortlessly. <br/>Select your mood, get motivational insights, and monitor your emotions over time. Stay aware of your emotional well-being and make positive changes. With our AI-powered chat support, you can also get guidance anytime!</p>
+        <a href="mood.html" class="btn btn-custom">Start Mood Detection</a>
+        
+        <!-- Dark Mode Toggle -->
+        <!-- <div class="mt-4">
+            <label for="darkModeToggle" class="form-label" id="darkModeLabel">Dark Mode</label>
+            <label class="toggle-switch mt-3">
+                <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+                <span class="slider"></span>
+            </label>
+        </div> -->
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Mood Wave. All rights reserved.</p>
+    </footer>
+
+    <!-- Chat Box -->
+    <div id="chat-box">
+        <div id="chat-header" onclick="toggleChat()">AI Chat Support</div>
+        <div id="chat-messages"></div>
+        <div id="chat-input">
+            <input type="text" id="chat-message" placeholder="Ask me anything...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <div id="chat-toggle" onclick="toggleChat()">💬</div>
+
+    <script>
+       
+
+        function toggleChat() {
+            var chatBox = document.getElementById("chat-box");
+            chatBox.style.display = chatBox.style.display === "none" || chatBox.style.display === "" ? "flex" : "none";
+        }
+
+        function sendMessage() {
+            var messageInput = document.getElementById("chat-message");
+            var message = messageInput.value;
+            if (message.trim() === "") return;
+            var chatMessages = document.getElementById("chat-messages");
+            var userMessage = `<div><strong>You:</strong> ${message}</div>`;
+            chatMessages.innerHTML += userMessage;
+
+            // AI Response
+            var response = getAIResponse(message);
+            var botMessage = `<div><strong>AI:</strong> ${response}</div>`;
+            chatMessages.innerHTML += botMessage;
+
+            messageInput.value = "";
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getAIResponse(message) {
+    const lowerMessage = message.toLowerCase();
+
+    if (lowerMessage.includes("mood wave")) {
+        return "Mood Wave is a platform that helps you track and understand your emotions over time.";
+    } else if (lowerMessage.includes("mood detector")) {
+        return "The Mood Detector allows you to select your mood, view motivational insights, and track your mood history.";
+    } else if (lowerMessage.includes("what can i do here")) {
+        return "Here, you can track your moods, see your emotional progress, and receive support with our AI-powered chat.";
+    } else if (lowerMessage.includes("how does it work")) {
+        return "You select your current mood, and the website tracks your mood history while offering motivation to keep you positive!";
+    } else if (lowerMessage.includes("hello") || lowerMessage.includes("hi")) {
+        return "Hello! How can I assist you today?";
+    } else if (lowerMessage.includes("who created you")) {
+        return "I was created by the Mood Wave team to help you track and manage your emotions.";
+    } else if (lowerMessage.includes("how are you")) {
+        return "I'm just a bot, but thanks for asking! How can I help you today?";
+    } else if (lowerMessage.includes("how do i change my profile picture")) {
+        return "Go to the Profile Page, click on your profile photo, and upload a new one.";
+    } else if (lowerMessage.includes("how do i reset my password")) {
+        return "On the Profile Page, click 'Change Password' and follow the instructions.";
+    } else if (lowerMessage.includes("how does the progress page work")) {
+        return "The Progress Page tracks and displays your mood changes over time using a graph.";
+    } else if (lowerMessage.includes("can i use dark mode")) {
+        return "Yes! You can toggle Dark Mode from the Profile Page.";
+    } else if (lowerMessage.includes("how do i contact support")) {
+        return "Go to the Contact Page for social media links and a feedback form.";
+    } else if (lowerMessage.includes("where can i find motivational videos")) {
+        return "After selecting a mood on the Mood Detector Page, a motivational YouTube video will be displayed.";
+    } else if (lowerMessage.includes("how do i log out")) {
+        return "Click the 'Logout' button on the Profile Page to securely log out.";
+    } else if (lowerMessage.includes("is my data safe")) {
+        return "Yes! Your data is securely stored and not shared with third parties.";
+    } else if (lowerMessage.includes("how can i delete my account")) {
+        return "Currently, account deletion is not available, but you can contact support for further assistance.";
+    } else if (lowerMessage.includes("can i track my past moods")) {
+        return "Yes! The Progress Page allows you to track and analyze your past moods using a graph.";
+    } else if (lowerMessage.includes("how often should i update my mood")) {
+        return "You can update your mood anytime, but daily check-ins help track your emotional trends better.";
+    } else if (lowerMessage.includes("why should i use mood wave")) {
+        return "Mood Wave helps you understand your emotions, provides motivation, and tracks your mood history for personal growth.";
+    } else if (lowerMessage.includes("can i use this on my phone")) {
+        return "Yes! Mood Wave is fully responsive and works on all devices.";
+    } else if (lowerMessage.includes("do i need to create an account")) {
+        return "Yes, creating an account allows you to save and track your mood history.";
+    } else if (lowerMessage.includes("what happens if i forget my password")) {
+        return "You can reset your password by clicking 'Forgot Password' on the login page.";
+    } else if (lowerMessage.includes("will mood wave suggest activities for my mood")) {
+        return "Yes! Based on your selected mood, Mood Wave will show motivational quotes and videos.";
+    } else if (lowerMessage.includes("can i share my mood tracking data")) {
+        return "Currently, data sharing is not available, but you can manually save or screenshot your progress.";
+    } else if (lowerMessage.includes("does mood wave store my mood data permanently")) {
+        return "Your mood data is stored securely and only accessible through your account.";
+    } else if (lowerMessage.includes("can i customize the motivational quotes")) {
+        return "Not at the moment, but Mood Wave provides a variety of motivational quotes for different moods.";
+    } else {
+        return "I'm here to help! Could you please specify your question?";
+    }
+}
+
+    </script>
+</body>
+</html>
