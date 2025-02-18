@@ -99,19 +99,7 @@
             window.location.href = "login.html"; 
             return false;
         }
-        function validateEmail(email) {
-    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return re.test(email);
-}
-
-function validateRegistration() {
-    var email = document.getElementById("email").value;
-    if (!validateEmail(email)) {
-        errorMessage.textContent = "Invalid email format!";
-        return false;
-    }
-    // Continue with existing validation logic...
-}
+        
 
     </script>
 </body>
